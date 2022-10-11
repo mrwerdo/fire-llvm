@@ -23,9 +23,13 @@ inline void compile(clang::CompilerInstance *CI,
   // create new compiler instance
   auto CInvNew { std::make_shared<clang::CompilerInvocation>() };
 
+  std::vector<std::string> CLA= CodeGenOpts.CommandLineArgs;
+  std::vector<const char *> CommandLineArgs(CLA.size(), nullptr);
+  std::transform(CLA.cbegin(), CLA.cend(), CommandLineArgs.begin(), [](const std::string &s) { return s.c_str(); });
+
   bool CInvNewCreated {
     clang::CompilerInvocation::CreateFromArgs(
-      *CInvNew, CodeGenOpts.CommandLineArgs, Diagnostics) };
+      *CInvNew, CommandLineArgs, Diagnostics) };
 
   assert(CInvNewCreated);
 
